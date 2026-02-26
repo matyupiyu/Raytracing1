@@ -33,7 +33,7 @@ int main (){
             int eightbit_color_r = 0; // 8bit色
             int eightbit_color_g = 0;
             int eightbit_color_b = 0;
-            int samples = 1; // サンプル数
+            int samples = 12; // サンプル数
             int reflects = 5; // 反射回数
 
             // サンプリングの繰り返し
