@@ -33,8 +33,8 @@ int main (){
             int eightbit_color_r = 0; // 8bit色
             int eightbit_color_g = 0;
             int eightbit_color_b = 0;
-            int samples = 12; // サンプル数
-            int reflects = 5; // 反射回数
+            int samples = 100; // サンプル数
+            int reflects = 1; // 反射回数
 
             // サンプリングの繰り返し
             for (int i=0; i < samples; i++){
@@ -69,8 +69,8 @@ int main (){
                             // SurfaceResult res = {}; // 屈折、全反射予定
                         } else { // 物体に当たった場合
                             SurfaceResult res = intersect_point(ray_o, ray_d, best_hit.t, obj);
-                            path_color = add(path_color, hadamard(throughput, res.color)); // イチサンプルとしてのピクセルの色
                             throughput = hadamard(throughput, obj.col); // 次の物体のために減衰率をアダマールで積算
+                            path_color = add(path_color, hadamard(throughput, res.color)); // イチサンプルとしてのピクセルの色
                             // 次のレイを生成
                             ray_o = res.next_o; // レイの方向をresの結果に更新
                             ray_d = res.next_d; // レイの方向をresの結果に更新

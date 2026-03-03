@@ -10,7 +10,6 @@ static inline Vec generate_random_d(Vec o, Vec normal){
     normal = normalize(normal);
     Vec dx = normal; // 法線方向の座標軸をdxとする
     Vec dy;
-    Vec xyz;
 
     if ((normal.x) > -0.9 && (normal.x) < 0.9){
         Vec x = {1.0, 0.0, 0.0};
@@ -20,6 +19,8 @@ static inline Vec generate_random_d(Vec o, Vec normal){
         dy = normalize(cross(normal, x));
     }
     Vec dz = normalize(cross(dx, dy));
+
+    Vec xyz = {0, 0, 0};
 
     while(1){
         double ux = 2 * ((double)rand() / RAND_MAX) - 1;
@@ -36,7 +37,7 @@ static inline Vec generate_random_d(Vec o, Vec normal){
             continue;
         }
 
-        Vec xyz = normalize(r); // 単位ベクトル化
+        xyz = normalize(r); // 単位ベクトル化
         break;
     }
     return xyz;

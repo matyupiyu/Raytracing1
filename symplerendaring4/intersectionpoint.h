@@ -33,6 +33,10 @@ static inline SurfaceResult intersect_point_infplane(Vec o, Vec d, double t, Inf
     res.next_o = add(o, mul(d, t));
     Vec normal = normalize(i.n);
 
+    if (dot(d, normal) > 0){
+        normal = mul(normal, -1.0);
+    }
+
     res.next_o = offset_pos(res.next_o, normal); // 交点を浮かせる
 
     res.next_d = generate_random_d(res.next_o, normal);
@@ -44,6 +48,10 @@ static inline SurfaceResult intersect_point_limitplane(Vec o, Vec d, double t, L
     SurfaceResult res;
     res.next_o = add(o, mul(d, t));
     Vec normal = normalize(l.n);
+
+    if (dot(d, normal) > 0){
+        normal = mul(normal, -1.0);
+    }
 
     res.next_o = offset_pos(res.next_o, normal);
 
