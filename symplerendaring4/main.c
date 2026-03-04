@@ -17,6 +17,11 @@ int main (){
 
 
     for (int y = 0; y < cam.height; y++){
+        // プログラムの進行度を百分率表示
+        if (y % 10 == 0) {
+            printf("\r%.1f%%", (double)y / cam.height * 100.0);
+            fflush(stdout);
+        }
         for (int x = 0; x < cam.width; x++){
             // ピクセル上の座標0~511を三次元座標-1.0~1.0に合わせる
             double px = ((double)x / cam.width) * 2.0 - 1.0;
@@ -33,8 +38,8 @@ int main (){
             int eightbit_color_r = 0; // 8bit色
             int eightbit_color_g = 0;
             int eightbit_color_b = 0;
-            int samples = 100; // サンプル数
-            int reflects = 1; // 反射回数
+            int samples = 80; // サンプル数
+            int reflects = 2; // 反射回数
 
             // サンプリングの繰り返し
             for (int i=0; i < samples; i++){
@@ -64,9 +69,14 @@ int main (){
                             break;
                         }
                         if (obj.mat == METAL){ // 金属に当たった場合
-                            // SurfaceResult res = {}; // 鏡面反射予定
+                            SurfaceResult res = intersect_metal(ray_o, ray_d, best_hit.t, obj);
+                            throughput = hadamard(throughput, obj.col); // 次の物体のために減衰率をアダマールで積算
+                            path_color = add(path_color, hadamard(throughput, res.color)); // イチサンプルとしてのピクセルの色
+                            // 次のレイを生成
+                            ray_o = res.next_o; // レイの方向をresの結果に更新
+                            ray_d = res.next_d; // レイの方向をresの結果に更新
                         } else if (obj.mat == GLASS){ // ガラスに当たった場合
-                            // SurfaceResult res = {}; // 屈折、全反射予定
+                            // SurfaceResult res = glass_reflects(); // 屈折、全反射予定
                         } else { // 物体に当たった場合
                             SurfaceResult res = intersect_point(ray_o, ray_d, best_hit.t, obj);
                             throughput = hadamard(throughput, obj.col); // 次の物体のために減衰率をアダマールで積算

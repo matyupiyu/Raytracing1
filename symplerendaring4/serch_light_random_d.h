@@ -43,7 +43,6 @@ static inline Vec generate_random_d(Vec o, Vec normal){
     return xyz;
 }
 
-
 // その地点から光源が見えるかを判定し、光を計算
 static inline Vec search_light(Vec normal, Vec o, Vec obj_col){
     Vec direct_lightning = {0.0, 0.0, 0.0}; // 光の初期化

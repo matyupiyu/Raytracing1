@@ -105,4 +105,70 @@ static inline SurfaceResult intersect_point(Vec o, Vec d, double t, Object obj) 
     return result;
 }
 
+static inline SurfaceResult intersect_metal_sphere(Vec o, Vec d, double t, Sphere s, Vec obj_col){
+    SurfaceResult res;
+    res.next_o = add(o, mul(d, t)); // 交点を求める
+    Vec normal = normalize(sub(res.next_o, s.o)); // 反射地点における法線
+    
+    if (dot(d, normal) > 0){
+        normal = mul(normal, -1.0);
+    }
+
+    res.next_o = offset_pos(res.next_o, normal); // 座標を浮かせる
+
+    res.next_d = sub(d, mul(normal, 2.0 * dot(d, normal))); // 次の反射方向を作成
+    res.color = (Vec){0, 0, 0}; // 直接光を計算
+    return res;
+}
+
+static inline SurfaceResult intersect_metal_infplane(Vec o, Vec d, double t, Infplane i, Vec obj_col){
+    SurfaceResult res;
+    res.next_o = add(o, mul(d, t));
+    Vec normal = normalize(i.n);
+
+    if (dot(d, normal) > 0){
+        normal = mul(normal, -1.0);
+    }
+
+    res.next_o = offset_pos(res.next_o, normal); // 交点を浮かせる
+
+    res.next_d = sub(d, mul(normal, 2.0 * dot(d, normal)));
+    res.color = (Vec){0, 0, 0};
+    return res;
+}
+
+static inline SurfaceResult intersect_metal_limitplane(Vec o, Vec d, double t, Limitplane l, Vec obj_col){
+    SurfaceResult res;
+    res.next_o = add(o, mul(d, t));
+    Vec normal = normalize(l.n);
+
+    if (dot(d, normal) > 0){
+        normal = mul(normal, -1.0);
+    }
+
+    res.next_o = offset_pos(res.next_o, normal);
+
+    res.next_d = sub(d, mul(normal, 2.0 * dot(d, normal)));
+    res.color = (Vec){0, 0, 0};
+    return res;
+}
+
+static inline SurfaceResult intersect_metal(Vec o, Vec d, double t, Object obj) {
+
+    SurfaceResult result;
+
+    // switchはifみたいなもの。ここでは、ifよりみやすいので使う。
+    switch (obj.type){
+        case SPHERE:
+            result =  intersect_metal_sphere(o, d, t, obj.s, obj.col);
+            break;
+        case INFPLANE:
+            result = intersect_metal_infplane(o, d, t, obj.i, obj.col);
+            break;
+        case LIMITPLANE:
+            result = intersect_metal_limitplane(o, d, t, obj.l, obj.col);
+            break;
+    }
+    return result;
+}
 #endif

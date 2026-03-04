@@ -1,64 +1,71 @@
 #include "struct_vec.h"
 #ifndef MADE_OBJECT_CAMERA_H  // 二重読み込み防止（おまじない）
 #define MADE_OBJECT_CAMERA_H
-#define MAX_OBJECTS 6 
+#define MAX_OBJECTS 8
 
-// 構造体Cameraにより構成されたcamをつくる
+// 構造体Cameraの設定（視点を少し引いて全体が見えるように調整）
 static Camera cam = {
-    {0 ,0, -5.0},  // camの位置ベクトル
-    {0 ,0 , 1},    // カメラの方向ベクトル
-    512, 512,      // camの解像度
-    {0, 0, 0}      // screenの位置ベクトル   
+    {0, 0, -5.0},  // 位置を少し後ろに
+    {0, 0, 1},      // 前方を向く
+    512, 512,
+    {0, 0, 0}
 };
 
-// 物体をstruct_vec.hに応じてsceneで定義する
 static Object scene[MAX_OBJECTS];
 
-// C言語では、関数の外で"代入"を行うことができないそのため、関数scene
-// にまとめてその中でscene[0].type=...のような代入を行う
 static void scene_objects() {
-    // まずは番号0の球を定義
-    scene[0].type = SPHERE;
-    scene[0].col = (Vec){0.78, 0, 0};
-    scene[0].mat = SOLID;
-    scene[0].s = (Sphere){{0, -0.5, 7.0}, 1.0};
+    // --- 壁の設定 ---
 
-    //次に番号1の無限平面を定義
+    // 床 (白色)
+    scene[0].type = INFPLANE;
+    scene[0].col = (Vec){1, 1, 1};
+    scene[0].i.o = (Vec){0, -1.0, 0};
+    scene[0].i.n = (Vec){0, 1, 0};
+
+    // 天井 (白色)
     scene[1].type = INFPLANE;
-    scene[1].col = (Vec){0.59, 0.59, 0.59};         
-    scene[1].i.o = (Vec){0, -0.8, 0}; //平面上の任意の点(ここでは[0]と交わる点)
-    scene[1].i.n = (Vec){0, 1, 0}; // 法線ベクトル
-    
-    // 2番の球
-    scene[2].type = SPHERE;
-    scene[2].col = (Vec){0, 0, 0.78};
-    scene[2].mat = SOLID;
-    scene[2].s = (Sphere){{0.2, -0.4, 1.0}, 0.53};
+    scene[1].col = (Vec){1, 1, 1};
+    scene[1].i.o = (Vec){0, 1.0, 0};
+    scene[1].i.n = (Vec){0, 1, 0};
 
-    // 番号3の円柱を定義
-    scene[3].type = CYLINDER;
-    scene[3].col = (Vec){0, 1.0, 0}; // 緑色
-    scene[3].c.o = (Vec){0.6, -0.8, -0.5}; // 底面の中心
-    scene[3].c.n = (Vec){0, 1, 0}; // 真上方向のベクトル
-    scene[3].c.r = 0.25; // 半径
-    scene[3].c.h = 0.2; // 高さ
-    scene[3].mat = SOLID;
-    
-    // 番号4の有限平面を定義
-    scene[4].type = LIMITPLANE;
-    scene[4].col = (Vec){0, 0.78,0.78};
-    scene[4].l.o = (Vec){-1.5, 0, 5};
-    scene[4].l.n = (Vec){-0.6, -0.6, -1};
-    scene[4].l.w_vec = (Vec){-1, 1, 0};
-    scene[4].l.width = 1.2;
-    scene[4].l.height = 1.5;
-    scene[4].mat = SOLID;
+    // 奥の壁 (白色)
+    scene[2].type = INFPLANE;
+    scene[2].col = (Vec){1, 1, 0};
+    scene[2].i.o = (Vec){0, 0, 2.0};
+    scene[2].i.n = (Vec){0, 0, -1};
 
-    // 光源
-    scene[5].type = LIGHT;
-    scene[5].col = (Vec){0.9, 0.9, 0.9};
-    scene[5].li.o = (Vec){-50, 50, -50};
-};
+    // 右の壁 (緑色)
+    scene[3].type = INFPLANE;
+    scene[3].col = (Vec){0.1, 0.8, 0.1};
+    scene[3].i.o = (Vec){1.0, 0, 0};
+    scene[3].i.n = (Vec){-1, 0, 0};
+
+    // 左の壁 (赤色)
+    scene[4].type = INFPLANE;
+    scene[4].col = (Vec){1.0, 0.1, 0.1};
+    scene[4].i.o = (Vec){-1.0, 0, 0};
+    scene[4].i.n = (Vec){1, 0, 0};
+
+    // --- オブジェクト ---
+
+    // 中央の球体
+    scene[5].type = SPHERE;
+    scene[5].col = (Vec){0, 0, 0.9}; // ほぼ白
+    scene[5].mat = SOLID;
+    scene[5].s = (Sphere){{0, -0.82, 1.0}, 0.18};
+
+    // --- 光源 ---
+    // 天井付近に配置
+    scene[6].type = LIGHT;
+    scene[6].col = (Vec){0.6, 0.6, 0.6}; // 少し強めに
+    scene[6].li.o = (Vec){0, 0.95, 1.0};
+
+    // 中央の球体
+    scene[7].type = SPHERE;
+    scene[7].col = (Vec){1.0, 1.0, 1.0}; // ほぼ白
+    scene[7].mat = METAL;
+    scene[7].s = (Sphere){{0.4, -0.75, 1.4}, 0.25};
+}
 
 
 #endif
