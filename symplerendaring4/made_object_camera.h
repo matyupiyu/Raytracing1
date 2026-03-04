@@ -1,7 +1,7 @@
 #include "struct_vec.h"
 #ifndef MADE_OBJECT_CAMERA_H  // 二重読み込み防止（おまじない）
 #define MADE_OBJECT_CAMERA_H
-#define MAX_OBJECTS 8
+#define MAX_OBJECTS 9
 
 // 構造体Cameraの設定（視点を少し引いて全体が見えるように調整）
 static Camera cam = {
@@ -50,7 +50,7 @@ static void scene_objects() {
 
     // 中央の球体
     scene[5].type = SPHERE;
-    scene[5].col = (Vec){0, 0, 0.9}; // ほぼ白
+    scene[5].col = (Vec){0, 0, 0.9}; 
     scene[5].mat = SOLID;
     scene[5].s = (Sphere){{0, -0.82, 1.0}, 0.18};
 
@@ -60,11 +60,17 @@ static void scene_objects() {
     scene[6].col = (Vec){0.6, 0.6, 0.6}; // 少し強めに
     scene[6].li.o = (Vec){0, 0.95, 1.0};
 
-    // 中央の球体
+    // 鏡面の球体
     scene[7].type = SPHERE;
     scene[7].col = (Vec){1.0, 1.0, 1.0}; // ほぼ白
     scene[7].mat = METAL;
     scene[7].s = (Sphere){{0.4, -0.75, 1.4}, 0.25};
+
+    // 鏡面の球体
+    scene[8].type = SPHERE;
+    scene[8].col = (Vec){1.0, 0.84, 0}; // ほぼ白
+    scene[8].mat = METAL;
+    scene[8].s = (Sphere){{-0.4, -0.75, 1.4}, 0.25};
 }
 
 
