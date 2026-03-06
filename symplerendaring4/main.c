@@ -35,11 +35,12 @@ int main (){
             double min_t = 1e10;
             Vec sum_color = {0 ,0 ,0}; // そうサンプル色
             Vec avg_color = {0, 0, 0}; // 平均色
+            Vec sky_color = {0.3, 0.5, 0.7};
             int eightbit_color_r = 0; // 8bit色
             int eightbit_color_g = 0;
             int eightbit_color_b = 0;
             int samples = 200; // サンプル数
-            int reflects = 12; // 反射回数
+            int reflects = 3; // 反射回数 
 
             // サンプリングの繰り返し
             for (int i=0; i < samples; i++){
@@ -86,6 +87,10 @@ int main (){
                             ray_o = res.next_o; // レイの方向をresの結果に更新
                             ray_d = res.next_d; // レイの方向をresの結果に更新
                         }
+                    } 
+                    else {
+                        path_color = add(path_color, hadamard(throughput, sky_color));
+                        break;
                     }
                 }
             sum_color = add(sum_color, path_color); // サンプル色を累積
