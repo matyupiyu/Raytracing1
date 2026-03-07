@@ -56,7 +56,8 @@ static inline Vec search_light(Vec normal, Vec o, Vec obj_col){
              //面の法線ベクトルと光線の方向ベクトルの単位ベクトル同士の内積はそのままcosΘ
             double cos_theta = dot(normal, light_n);
             // cos<0の場合、光が裏側から当たってるのでノーカウント
-            if (cos_theta <= 0) continue; 
+            if (cos_theta <= 0) continue;
+            // ガラスは光を透過するので無視
             int shadowed = 0; //光源が遮られない状態0に初期化
             for (int j = 0; j < MAX_OBJECTS; j++){
                 // 自分自身, 光源との判定はスキップ

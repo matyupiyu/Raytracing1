@@ -1,21 +1,19 @@
 #include "struct_vec.h"
 #ifndef MADE_OBJECT_CAMERA_H  // 二重読み込み防止（おまじない）
 #define MADE_OBJECT_CAMERA_H
-#define MAX_OBJECTS 9
+#define MAX_OBJECTS 10
 
 // 構造体Cameraの設定（視点を少し引いて全体が見えるように調整）
 static Camera cam = {
-    {0, 0, -5.0},  // 位置を少し後ろに
+    {0, 0, -4.8},  // 位置を少し後ろに
     {0, 0, 1},      // 前方を向く
-    512, 512,
-    {0, 0, 0}
+   512, 512,
+    {0, 0, 0} // スクリーンの位置
 };
 
 static Object scene[MAX_OBJECTS];
 
 static void scene_objects() {
-    // --- 壁の設定 ---
-
     // 床 (白色)
     scene[0].type = INFPLANE;
     scene[0].col = (Vec){1, 1, 1};
@@ -33,12 +31,14 @@ static void scene_objects() {
     scene[2].col = (Vec){1, 1, 0};
     scene[2].i.o = (Vec){0, 0, 2.0};
     scene[2].i.n = (Vec){0, 0, -1};
+    
 
     // 右の壁 (緑色)
     scene[3].type = INFPLANE;
     scene[3].col = (Vec){0.1, 0.8, 0.1};
     scene[3].i.o = (Vec){1.0, 0, 0};
     scene[3].i.n = (Vec){-1, 0, 0};
+    scene[3].mat = SOLID;
 
     // 左の壁 (赤色)
     scene[4].type = INFPLANE;
@@ -50,8 +50,9 @@ static void scene_objects() {
 
     // 中央の球体
     scene[5].type = SPHERE;
-    scene[5].col = (Vec){0, 0, 0.9}; 
-    scene[5].mat = SOLID;
+    scene[5].col = (Vec){1, 1, 1}; 
+    scene[5].mat = GLASS;
+    scene[5].refractive_index =   ; // ガラスの屈折率を追加！
     scene[5].s = (Sphere){{0, -0.82, 1.0}, 0.18};
 
     // --- 光源 ---
@@ -66,12 +67,12 @@ static void scene_objects() {
     scene[7].mat = METAL;
     scene[7].s = (Sphere){{0.4, -0.75, 1.4}, 0.25};
 
-    // 鏡面の球体
-    scene[8].type = SPHERE;
-    scene[8].col = (Vec){1.0, 0.84, 0}; // ほぼ白
-    scene[8].mat = METAL;
-    scene[8].s = (Sphere){{-0.4, -0.75, 1.4}, 0.25};
+    scene[9].type = SPHERE;
+    scene[9].col = (Vec){0.1, 0.1, 0.9}; // ほぼ白
+    scene[9].mat = SOLID;
+    scene[9].s = (Sphere){{-0.4, -0.75, 1.4}, 0.25};
 }
+
 
 
 #endif
